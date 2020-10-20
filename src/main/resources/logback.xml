@@ -1,0 +1,11 @@
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%date{ISO8601}] [%level] [%logger] [%thread] - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <logger name="org.http4s.blaze" level="WARN" />
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>

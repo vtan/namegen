@@ -1,0 +1,104 @@
+:root {
+  --selected-bg: #faf1c7;
+  --selected-hover-bg: #fff6cc;
+  --ui-bg: #f4f4f4;
+  --ui-hover-bg: #fcfcfc;
+  --ui-border: #a0a090;
+  --header-bg: linear-gradient(#fcfcfc, #fafafa);
+  --header-bg2: #fafafa;
+  --header-border: #eaeaea;
+}
+
+html {
+  font-family: 'Lato', sans-serif;
+  font-size: 16px;
+  background-color: #fcfcfc;
+  color: #101010;
+}
+
+a:link, a:visited { color: #1c4079; }
+
+.hidden { display: none; }
+
+header {
+  padding: 1rem 0;
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--header-border);
+}
+
+button {
+  padding: 0.25rem 0.5rem;
+  background-color: var(--ui-bg);
+  border: 1px solid var(--ui-border);
+  border-radius: 4px;
+}
+
+button:hover {
+  background-color: var(--ui-hover-bg);
+  transition: background-color 0.15s;
+}
+
+button:focus { outline: 1px solid rgba(0, 0, 0, 0.1); }
+
+.centeredLayout {
+  width: min(640px, 100vw - 16px);
+  margin: 0 auto;
+}
+
+.selectors {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+
+.selectors .generate {
+  margin-right: 1rem;
+  font-weight: bolder;
+}
+
+.selectors > :not(:first-child) { margin-left: 0.5rem; }
+
+.selectors .repositoryLink {
+  display: inline-block;
+  margin-left: auto;
+  padding-top: 0.5rem;
+}
+
+.sexSelector button {
+  width: 2rem;
+  text-align: center;
+}
+
+button:active { background-color: var(--selected-bg); }
+button.selected { background-color: var(--selected-bg); }
+button.selected:hover {
+  background-color: var(--selected-hover-bg);
+  transition: background-color 0.15s;
+}
+
+button .unimportant { color: var(--ui-border); }
+
+.decadeSelector { margin-top: 0.5rem; }
+
+.names { margin-top: 1rem; }
+
+.name {
+  margin-left: -1rem;
+  padding: 0.25rem 0.25rem 0.25rem 1rem;
+}
+
+.name.selected { background-color: var(--selected-bg); }
+
+.name:hover, .name.selected:hover { background-color: var(--selected-hover-bg); }
+.name.selected:hover { transition: 0.15s; }
+
+.nameDetails { margin: 0.25rem 0 0.25rem 1rem; }
+
+.nameDetailsRow { padding-top: 0.25rem; }
+
+.nameDetailsRow span { display: inline-block; }
+
+.nameDetailsRow span:first-child {
+  min-width: 6rem;
+  font-weight: bolder;
+}

@@ -1,6 +1,5 @@
 package namegen
 
-import scala.collection.SortedMap
 import scala.util.Random
 
 trait Generator {
@@ -13,13 +12,14 @@ object Generator {
     def generate(random: Random): Option[GeneratedName] = None
     def size: Int = 0
   }
-}
 
-final case class ProbabilityMap(names: SortedMap[Float, String]) extends Generator {
-  def generate(random: Random): Option[GeneratedName] =
-    names.maxBefore(random.nextFloat()).map((GeneratedName.apply _).tupled)
+  def fromProbabilityMap(map: ProbabilityMap[String]): Generator =
+    new Generator {
+      def generate(random: Random): Option[GeneratedName] =
+        map.maxBefore(random.nextFloat()).map((GeneratedName.apply _).tupled)
 
-  val size: Int = names.size
+      def size: Int = map.size
+    }
 }
 
 final case class UnionGenerator(gen1: Generator, gen2: Generator) extends Generator {

@@ -1,14 +1,17 @@
 package namegen
 
+import namegen.markov.MarkovGenerator
+
 import scala.util.Random
 
 class NameService(
-  firstNameBuckets: Map[FirstNameKey, ProbabilityMap],
-  lastNames: ProbabilityMap,
+  firstNameBuckets: Map[FirstNameKey, Generator],
+  lastNames: Generator,
+  markovGenerator: MarkovGenerator,
   random: Random
 ) {
 
-  def generate(decade: Int, sex: Option[Sex], limit: Int): GeneratedNames = {
+  def generateRealistic(decade: Int, sex: Option[Sex], limit: Int): GeneratedNames = {
     val firstNames = {
       lazy val male = firstNameBuckets.getOrElse(FirstNameKey(decade, Sex.Male), Generator.empty)
       lazy val female = firstNameBuckets.getOrElse(FirstNameKey(decade, Sex.Female), Generator.empty)
@@ -30,4 +33,9 @@ class NameService(
       names = names
     )
   }
+
+  def generateMarkov(limit: Int): Seq[String] =
+    (1 to limit).map { _ =>
+      capitalizeName(markovGenerator.generate(random, 3 to 7, 6 to 12).mkString)
+    }
 }

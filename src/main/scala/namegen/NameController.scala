@@ -17,7 +17,14 @@ class NameController(
     HttpRoutes.of[IO] {
       case GET -> Root / "names" :? Decade(decade) +& Sex(sex) +& Limit(limit) =>
         Ok(
-          nameService.generate(decade / 10, sex, limit.getOrElse(20)),
+          nameService.generateRealistic(decade / 10, sex, limit.getOrElse(20)),
+          `Cache-Control`(`max-age`(Duration.Zero), `no-cache`(), `must-revalidate`, `proxy-revalidate`),
+          Expires(HttpDate.Epoch)
+        )
+
+      case GET -> Root / "names" / "markov" :? Limit(limit) =>
+        Ok(
+          nameService.generateMarkov(limit.getOrElse(20)),
           `Cache-Control`(`max-age`(Duration.Zero), `no-cache`(), `must-revalidate`, `proxy-revalidate`),
           Expires(HttpDate.Epoch)
         )

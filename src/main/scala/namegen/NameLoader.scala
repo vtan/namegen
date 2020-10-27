@@ -4,7 +4,7 @@ import scala.io.Source
 
 object NameLoader {
 
-  def load(firstNamesPath: String, lastNamesPath: String): (Map[FirstNameKey, ProbabilityMap], ProbabilityMap) = {
+  def load(firstNamesPath: String, lastNamesPath: String): (Map[FirstNameKey, ProbabilityMap[String]], ProbabilityMap[String]) = {
     val builder = new ProbabilityMapBuilder
     val firstNames = {
       val source = Source.fromFile(firstNamesPath)

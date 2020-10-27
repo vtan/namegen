@@ -1,6 +1,6 @@
 package namegen
 
-import scala.collection.immutable.SortedMap
+import scala.collection.immutable.TreeMap
 import scala.collection.mutable
 
 class ProbabilityMapBuilder {
@@ -9,7 +9,7 @@ class ProbabilityMapBuilder {
   def build[BucketKey](
     lines: IterableOnce[String],
     processLine: String => (BucketKey, String, Int)
-  ): Map[BucketKey, ProbabilityMap] = {
+  ): Map[BucketKey, ProbabilityMap[String]] = {
     val totalCounts = mutable.Map.empty[BucketKey, Int]
     val countBuckets = mutable.Map.empty[BucketKey, mutable.ArrayBuffer[(Int, String)]]
 
@@ -33,19 +33,19 @@ class ProbabilityMapBuilder {
     totalCounts: Map[BucketKey, Int],
     key: BucketKey,
     bucket: mutable.ArrayBuffer[(Int, String)]
-  ): ProbabilityMap = {
+  ): ProbabilityMap[String] = {
     val totalCount = totalCounts.getOrElse(key, 0).toFloat
     val countsByName = mutable.ArrayBuffer.from(bucket.groupMapReduce(_._2)(_._1)(_ + _))
     countsByName.sortInPlaceBy(-_._2)
     var sum = 0
-    val builder = SortedMap.newBuilder[Float, String]
+    val builder = TreeMap.newBuilder[Float, String]
     countsByName.foreach {
       case (name, count) =>
         val probability = sum.toFloat / totalCount
         builder += probability -> name
         sum += count
     }
-    ProbabilityMap(builder.result())
+    builder.result()
   }
 
   private def poolName(name: String): String =

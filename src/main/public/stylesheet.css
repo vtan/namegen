@@ -45,6 +45,26 @@ button:focus { outline: 1px solid rgba(0, 0, 0, 0.1); }
   margin: 0 auto;
 }
 
+.typeSelector {
+  display: flex;
+  margin-bottom: 0.5rem;
+}
+
+.typeSelector a {
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  font-weight: bolder;
+}
+
+.typeSelector a:not(:first-of-type) { margin-left: 1.5rem; }
+
+.typeSelector a.selected { border-bottom: 2px solid var(--ui-border); }
+
+.typeSelector a:hover {
+  background-color: var(--selected-hover-bg);
+  transition: background-color 0.3s;
+}
+
 .selectors {
   display: flex;
   flex-wrap: wrap;

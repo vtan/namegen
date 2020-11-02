@@ -19,15 +19,15 @@ class NameController(
     import Params._
     HttpRoutes.of[IO] {
 
-      case GET -> Root / "names" :? Decade(decade) +& Sex(sex) +& Limit(limit) =>
+      case GET -> Root / "names" / "historical" :? Decade(decade) +& Sex(sex) +& Limit(limit) =>
         Ok(
           historicalNameService.generateNames(decade / 10, sex, limit.getOrElse(20)),
           noCache: _*
         )
 
-      case GET -> Root / "names" / "markov" :? Limit(limit) =>
+      case GET -> Root / "names" / "markov" :? Sex(sex) +& Limit(limit) =>
         Ok(
-          markovNameService.generateNames(limit.getOrElse(20)),
+          markovNameService.generateNames(sex, limit.getOrElse(20)),
           noCache: _*
         )
     }

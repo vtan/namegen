@@ -1,11 +1,20 @@
-import { GeneratedNames, Sex } from "./Model"
+import { HistoricalNames, Sex, MarkovNames } from "./Model"
 
-export function fetchNames(
+export function fetchHistoricalNames(
   decade: number,
   sex: Sex | undefined,
-  setter: (_: GeneratedNames) => void
+  setter: (_: HistoricalNames) => void
 ) {
-  fetch(`/api/names?limit=20&decade=${decade}` + (sex ? `&sex=${sex}` : ""))
+  fetch(`/api/names/historical?limit=20&decade=${decade}` + (sex ? `&sex=${sex}` : ""))
+    .then(response => response.json())
+    .then(setter)
+}
+
+export function fetchMarkovNames(
+  sex: Sex | undefined,
+  setter: (_: MarkovNames) => void
+) {
+  fetch(`/api/names/markov?limit=20` + (sex ? `&sex=${sex}` : ""))
     .then(response => response.json())
     .then(setter)
 }

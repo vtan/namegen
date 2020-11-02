@@ -15,7 +15,7 @@ class HistoricalNameService(
 
   private val lastNameGenerator = new HistoricalGenerator(lastNames)
 
-  def generateNames(decade: Int, sex: Option[Sex], limit: Int): GeneratedNames = {
+  def generateNames(decade: Int, sex: Option[Sex], limit: Int): HistoricalNames = {
     val firstNameGenerator = {
       lazy val male = firstNameGenerators.getOrElse(FirstNameKey(decade, Sex.Male), Generator.empty[GeneratedName])
       lazy val female = firstNameGenerators.getOrElse(FirstNameKey(decade, Sex.Female), Generator.empty[GeneratedName])
@@ -31,7 +31,7 @@ class HistoricalNameService(
         lastName <- lastNameGenerator.generate(random)
       } yield Seq(firstName, lastName)
     }
-    GeneratedNames(
+    HistoricalNames(
       firstNameCount = firstNameGenerator.size,
       lastNameCount = lastNameGenerator.size,
       names = names

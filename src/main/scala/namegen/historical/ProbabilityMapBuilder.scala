@@ -1,4 +1,6 @@
-package namegen
+package namegen.historical
+
+import namegen.ProbabilityMap
 
 import scala.collection.immutable.TreeMap
 import scala.collection.mutable

@@ -1,4 +1,4 @@
-package namegen
+package namegen.common
 
 final case class FirstName(
   name: String,

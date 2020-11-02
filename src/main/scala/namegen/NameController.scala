@@ -1,46 +1,53 @@
 package namegen
 
+import namegen.historical.HistoricalNameService
+import namegen.markov.MarkovNameService
+
 import cats.effect.IO
 import org.http4s.{HttpDate, HttpRoutes, ParseFailure, QueryParamDecoder}
 import org.http4s.CacheDirective._
 import org.http4s.circe.CirceEntityEncoder._
 import org.http4s.dsl.io._
 import org.http4s.headers._
-
 import scala.concurrent.duration.Duration
 
 class NameController(
-  nameService: NameService
+  historicalNameService: HistoricalNameService,
+  markovNameService: MarkovNameService
 ) {
   val routes: HttpRoutes[IO] = {
     import Params._
     HttpRoutes.of[IO] {
+
       case GET -> Root / "names" :? Decade(decade) +& Sex(sex) +& Limit(limit) =>
         Ok(
-          nameService.generateRealistic(decade / 10, sex, limit.getOrElse(20)),
-          `Cache-Control`(`max-age`(Duration.Zero), `no-cache`(), `must-revalidate`, `proxy-revalidate`),
-          Expires(HttpDate.Epoch)
+          historicalNameService.generateNames(decade / 10, sex, limit.getOrElse(20)),
+          noCache: _*
         )
 
       case GET -> Root / "names" / "markov" :? Limit(limit) =>
         Ok(
-          nameService.generateMarkov(limit.getOrElse(20)),
-          `Cache-Control`(`max-age`(Duration.Zero), `no-cache`(), `must-revalidate`, `proxy-revalidate`),
-          Expires(HttpDate.Epoch)
+          markovNameService.generateNames(limit.getOrElse(20)),
+          noCache: _*
         )
     }
   }
 
+  private val noCache = Seq(
+    `Cache-Control`(`max-age`(Duration.Zero), `no-cache`(), `must-revalidate`, `proxy-revalidate`),
+    Expires(HttpDate.Epoch)
+  )
+
   private object Params {
     object Decade extends QueryParamDecoderMatcher[Int]("decade")
-    object Sex extends OptionalQueryParamDecoderMatcher[Sex]("sex")
+    object Sex extends OptionalQueryParamDecoderMatcher[common.Sex]("sex")
     object Limit extends OptionalQueryParamDecoderMatcher[Int]("limit")(limitDeocder)
   }
 
-  private implicit val sexDecoder: QueryParamDecoder[Sex] =
+  private implicit val sexDecoder: QueryParamDecoder[common.Sex] =
     QueryParamDecoder[String].emap {
-      case "male" => Right(Sex.Male)
-      case "female" => Right(Sex.Female)
+      case "male" => Right(common.Sex.Male)
+      case "female" => Right(common.Sex.Female)
       case invalid =>
         Left(ParseFailure(
           sanitized = "Invalid sex",

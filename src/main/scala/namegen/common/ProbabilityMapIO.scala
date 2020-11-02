@@ -1,4 +1,6 @@
-package namegen
+package namegen.common
+
+import namegen.ProbabilityMap
 
 import java.io.{BufferedWriter, FileWriter}
 import scala.collection.immutable.{ArraySeq, TreeMap}

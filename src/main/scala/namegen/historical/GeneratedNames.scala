@@ -1,4 +1,4 @@
-package namegen
+package namegen.historical
 
 import io.circe.Encoder
 import io.circe.generic.semiauto._

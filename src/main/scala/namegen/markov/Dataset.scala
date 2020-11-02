@@ -1,14 +1,15 @@
 package namegen.markov
 
-import namegen.{ProbabilityMap, ProbabilityMapIO, Sex, StringPool}
-import namegen.importer.FirstNameImporter
+import namegen.ProbabilityMap
+import namegen.common.{ProbabilityMapIO, Sex, StringPool}
+import namegen.importer.{FirstNameImporter, LastNameImporter}
 
 import scala.collection.immutable.ArraySeq
 
-object IO {
+object Dataset {
   import Ordering.Implicits._
 
-  def build(filename: String): Unit = {
+  def buildToFile(filename: String): Unit = {
     val (maleRuleset, femaleRuleset) = FirstNameImporter.importWith("data/raw") { firstNames =>
       val (maleNames, femaleNames) = firstNames
         .map(_._2)
@@ -17,14 +18,17 @@ object IO {
       val female = RulesetBuilder.build(femaleNames.map(name => name.name -> name.count))
       (male, female)
     }
+    val lastNameRuleset = LastNameImporter.importWith("data/raw")(RulesetBuilder.build)
 
-    // TODO last names
-    val buckets = rulesetToBuckets("M", maleRuleset) ++ rulesetToBuckets("F", femaleRuleset)
+    val buckets =
+      rulesetToBuckets("M", maleRuleset) ++
+      rulesetToBuckets("F", femaleRuleset) ++
+      rulesetToBuckets("L", lastNameRuleset)
 
     ProbabilityMapIO.writeBuckets(buckets, filename, bucketToLine)
   }
 
-  def load(filename: String, stringPool: StringPool): Map[String, Ruleset[ProbabilityMap]] = {
+  def loadFromFile(filename: String, stringPool: StringPool): Map[String, Ruleset[ProbabilityMap]] = {
     val buckets = ProbabilityMapIO.readBuckets(filename, lineToBucket(stringPool))
     buckets.groupMap(key = _._1._1) {
       case ((_, phonemes), probabilities) =>

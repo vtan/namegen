@@ -1,6 +1,6 @@
 package namegen.importer
 
-import namegen.{FirstName, Sex}
+import namegen.common.{FirstName, Sex}
 
 import scala.io.Source
 
@@ -25,6 +25,6 @@ object FirstNameImporter {
       case "M" => Sex.Male
     }
     val count = rawCount.toInt
-    namegen.FirstName(name, sex, count)
+    FirstName(name, sex, count)
   }
 }

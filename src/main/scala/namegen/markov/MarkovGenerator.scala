@@ -1,19 +1,24 @@
 package namegen.markov
 
 import namegen.ProbabilityMap
+import namegen.common.Generator
 
 import scala.collection.immutable.ArraySeq
 import scala.util.Random
 
-class MarkovGenerator(ruleset: Ruleset[ProbabilityMap]) {
+class MarkovGenerator(
+  ruleset: Ruleset[ProbabilityMap],
+  minLengthRange: Range,
+  maxLengthRange: Range
+) extends Generator[Seq[Phoneme]] {
 
   private val lookBehindLength: Int = ruleset.keys.map(_.length).max
 
-  def generate(random: Random, minLengthRange: Range, maxLengthRange: Range): Seq[Phoneme] = {
+  def generate(random: Random): Option[Seq[Phoneme]] = {
     val minLength = random.between(minLengthRange.start, minLengthRange.end)
     val maxLength = random.between(maxLengthRange.start, maxLengthRange.end)
 
-    Seq.unfold(ArraySeq.empty[Phoneme]) { previousPhonemes =>
+    val phonemes = Seq.unfold(ArraySeq.empty[Phoneme]) { previousPhonemes =>
       if (previousPhonemes.length >= maxLength) {
         None
       } else {
@@ -34,5 +39,6 @@ class MarkovGenerator(ruleset: Ruleset[ProbabilityMap]) {
         }
       }
     }
+    Some(phonemes).filter(_.nonEmpty)
   }
 }

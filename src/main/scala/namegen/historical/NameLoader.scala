@@ -1,4 +1,7 @@
-package namegen
+package namegen.historical
+
+import namegen.common.Sex
+import namegen.ProbabilityMap
 
 import scala.io.Source
 
@@ -36,6 +39,6 @@ object NameLoader {
       case "M" => Sex.Male
     }
     val count = rawCount.toInt
-    (FirstNameKey(decade, sex), name, count)
+    (namegen.historical.FirstNameKey(decade, sex), name, count)
   }
 }

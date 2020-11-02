@@ -1,6 +1,8 @@
 package namegen
 
-import namegen.markov.MarkovGenerator
+import namegen.common.StringPool
+import namegen.historical.{HistoricalNameService, NameLoader}
+import namegen.markov.MarkovNameService
 
 import cats.effect.{ExitCode, IO, IOApp}
 import org.http4s.implicits._
@@ -11,27 +13,28 @@ import scala.util.Random
 object Main extends IOApp {
 
   def run(args: List[String]): IO[ExitCode] = {
-    val markovGenerator = {
-      val stringPool = new StringPool
-      val rulesets = markov.IO.load("data/markov.csv", stringPool)
-      new MarkovGenerator(rulesets("F"))
-    }
+    val dependencies = new Dependencies
 
-    val (firstNames, lastNames) = NameLoader.load("firstnames.csv", "lastnames.csv")
-    val nameService = new NameService(
-      firstNames.map { case (k, v) => k -> Generator.fromProbabilityMap(v) },
-      Generator.fromProbabilityMap(lastNames),
-      markovGenerator,
-      new Random
-    )
-    val nameController = new NameController(nameService)
-
-    val router = Router("/api" -> nameController.routes).orNotFound
     import scala.concurrent.ExecutionContext.global
     BlazeServerBuilder[IO](global)
       .bindHttp(8081, "localhost")
-      .withHttpApp(router)
+      .withHttpApp(dependencies.router)
       .serve.compile.drain
       .as(ExitCode.Success)
+  }
+
+  class Dependencies {
+    val markovRulesets = {
+      val stringPool = new StringPool
+      markov.Dataset.loadFromFile("data/markov.csv", stringPool)
+    }
+
+    val random = new Random
+    val (firstNames, lastNames) = NameLoader.load("firstnames.csv", "lastnames.csv")
+    val historicalNameService = new HistoricalNameService(firstNames, lastNames, random)
+    val markovNameService = new MarkovNameService(markovRulesets, random)
+    val nameController = new NameController(historicalNameService, markovNameService)
+
+    val router = Router("/api" -> nameController.routes).orNotFound
   }
 }

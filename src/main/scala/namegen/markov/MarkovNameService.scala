@@ -13,17 +13,22 @@ class MarkovNameService(
   private val maleFirstNameGenerator = new MarkovGenerator(rulesets("M"), 3 to 7, 6 to 12)
   private val femaleFirstNameGenerator = new MarkovGenerator(rulesets("F"), 3 to 7, 6 to 12)
 
-  def generateNames(sex: Option[Sex], limit: Int): Seq[Seq[String]] = {
+  def generateNames(sex: Option[Sex], limit: Int): MarkovNames = {
     val firstNameGenerator = sex match {
       case Some(Sex.Female) => femaleFirstNameGenerator
       case Some(Sex.Male) => maleFirstNameGenerator
       case None => femaleFirstNameGenerator.union(maleFirstNameGenerator)
     }
-    (1 to limit).flatMap { _ =>
+    val names = (1 to limit).flatMap { _ =>
       for {
         firstName <- firstNameGenerator.generate(random)
         lastName <- lastNameGenerator.generate(random)
       } yield Seq(capitalizeName(firstName.mkString), capitalizeName(lastName.mkString))
     }
+    MarkovNames(
+      firstNameRules = firstNameGenerator.size,
+      lastNameRules = lastNameGenerator.size,
+      names = names
+    )
   }
 }

@@ -8,7 +8,11 @@ export interface HistoricalNames {
   names: ReadonlyArray<FullName>
 }
 
-export type MarkovNames = ReadonlyArray<ReadonlyArray<string>>
+export interface MarkovNames {
+  firstNameRules: number,
+  lastNameRules: number,
+  names: ReadonlyArray<ReadonlyArray<string>>
+}
 
 export type FullName = ReadonlyArray<GeneratedName>
 

@@ -1,7 +1,7 @@
 package namegen.markov
 
 import namegen.ProbabilityMap
-import namegen.common.Generator
+import namegen.common.SizedGenerator
 
 import scala.collection.immutable.ArraySeq
 import scala.util.Random
@@ -10,9 +10,11 @@ class MarkovGenerator(
   ruleset: Ruleset[ProbabilityMap],
   minLengthRange: Range,
   maxLengthRange: Range
-) extends Generator[Seq[Phoneme]] {
+) extends SizedGenerator[Seq[Phoneme]] {
 
   private val lookBehindLength: Int = ruleset.keys.map(_.length).max
+
+  val size: Int = ruleset.values.map(_.size).sum
 
   def generate(random: Random): Option[Seq[Phoneme]] = {
     val minLength = random.between(minLengthRange.start, minLengthRange.end)

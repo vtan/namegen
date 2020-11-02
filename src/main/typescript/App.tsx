@@ -92,8 +92,8 @@ const HistoricalNameList = (props: { result: HistoricalNames }) => {
         </div>
     })}
     <p>
-      Generated from {result.firstNameCount.toLocaleString("en-US")} first names
-      and {result.lastNameCount.toLocaleString("en-US")} last names
+      Generated from {formatNumber(result.firstNameCount)} first names
+      and {formatNumber(result.lastNameCount)} last names
       based on <a href="https://github.com/vtan/namegen#data">US population data</a>.
     </p>
   </div>
@@ -102,7 +102,7 @@ const HistoricalNameList = (props: { result: HistoricalNames }) => {
 const MarkovNameList = (props: { result: MarkovNames }) => {
   const { result } = props
   return <div className="names">
-    { result.map((names, index) => {
+    { result.names.map((names, index) => {
         const fullName = names.join(" ")
         const key = `${index}-${fullName}`
         return <div key={key} data-key={key} className="name">
@@ -110,7 +110,8 @@ const MarkovNameList = (props: { result: MarkovNames }) => {
         </div>
     })}
     <p>
-      Recombined from names
+      Generated using {formatNumber(result.firstNameRules)} probabilistic rules for first names
+      and {formatNumber(result.lastNameRules)} for last names
       based on <a href="https://github.com/vtan/namegen#data">US population data</a>.
     </p>
   </div>
@@ -154,4 +155,8 @@ const SexSelector = (props: { selected?: Sex, onChange: (_?: Sex) => void }) => 
     <button className={ selected === "male" ? "" : "selected" } onClick={onFemaleClick}>♀</button>
     <button className={ selected === "female" ? "" : "selected" } onClick={onMaleClick}>♂</button>
   </div>
+}
+
+function formatNumber(n: number): string {
+  return n.toLocaleString("en-US")
 }

@@ -10,6 +10,7 @@ object Dataset {
   import Ordering.Implicits._
 
   def buildToFile(filename: String): Unit = {
+    println("Building first names...")
     val (maleRuleset, femaleRuleset) = FirstNameImporter.importWith("data/raw") { firstNames =>
       val (maleNames, femaleNames) = firstNames
         .map(_._2)
@@ -18,6 +19,8 @@ object Dataset {
       val female = RulesetBuilder.build(femaleNames.map(name => name.name -> name.count))
       (male, female)
     }
+
+    println("Building last names...")
     val lastNameRuleset = LastNameImporter.importWith("data/raw")(RulesetBuilder.build)
 
     val buckets =
@@ -26,6 +29,7 @@ object Dataset {
       rulesetToBuckets("L", lastNameRuleset)
 
     ProbabilityMapIO.writeBuckets(buckets, filename, bucketToLine)
+    println("Done")
   }
 
   def loadFromFile(filename: String, stringPool: StringPool): Map[String, Ruleset[ProbabilityMap]] = {

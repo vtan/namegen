@@ -5,24 +5,22 @@ import namegen.ProbabilityMap
 import scala.collection.immutable.TreeMap
 import scala.collection.mutable
 
-class ProbabilityMapBuilder {
-  private val stringPool = mutable.Map.empty[String, String]
+private[historical]
+object ProbabilityMapBuilder {
 
   def build[BucketKey](
-    lines: IterableOnce[String],
-    processLine: String => (BucketKey, String, Int)
+    lines: Iterator[(BucketKey, String, Int)]
   ): Map[BucketKey, ProbabilityMap[String]] = {
     val totalCounts = mutable.Map.empty[BucketKey, Int]
     val countBuckets = mutable.Map.empty[BucketKey, mutable.ArrayBuffer[(Int, String)]]
 
-    lines.iterator.foreach { line =>
-      val (bucketKey, rawName, count) = processLine(line)
-      val name = poolName(rawName)
-      val _ = totalCounts.updateWith(bucketKey) {
-        case Some(sum) => Some(sum + count)
-        case None => Some(count)
-      }
-      countBuckets.getOrElseUpdate(bucketKey, mutable.ArrayBuffer.empty) += (count -> name)
+    lines.foreach {
+      case (bucketKey, name, count) =>
+        val _ = totalCounts.updateWith(bucketKey) {
+          case Some(sum) => Some(sum + count)
+          case None => Some(count)
+        }
+        countBuckets.getOrElseUpdate(bucketKey, mutable.ArrayBuffer.empty) += (count -> name)
     }
 
     val buckets = countBuckets.iterator.map {
@@ -49,12 +47,4 @@ class ProbabilityMapBuilder {
     }
     builder.result()
   }
-
-  private def poolName(name: String): String =
-    stringPool.get(name) match {
-      case Some(pooled) => pooled
-      case None =>
-        stringPool += ((name, name))
-        name
-    }
 }

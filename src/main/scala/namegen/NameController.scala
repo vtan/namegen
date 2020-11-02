@@ -21,7 +21,7 @@ class NameController(
 
       case GET -> Root / "names" / "historical" :? Decade(decade) +& Sex(sex) +& Limit(limit) =>
         Ok(
-          historicalNameService.generateNames(decade / 10, sex, limit.getOrElse(20)),
+          historicalNameService.generateNames(decade, sex, limit.getOrElse(20)),
           noCache: _*
         )
 

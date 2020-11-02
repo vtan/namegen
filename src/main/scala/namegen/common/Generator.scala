@@ -27,10 +27,9 @@ trait SizedGenerator[T] extends Generator[T] {
 }
 
 object SizedGenerator {
-  class Union[T](gen1: SizedGenerator[T], gen2: SizedGenerator[T]) extends SizedGenerator[T] {
-    def generate(random: Random): Option[T] =
-      (if (random.nextBoolean()) gen1 else gen2).generate(random)
-
+  class Union[T](gen1: SizedGenerator[T], gen2: SizedGenerator[T])
+    extends Generator.Union[T](gen1, gen2) with SizedGenerator[T]
+  {
     def size: Int = gen1.size + gen2.size
   }
 }

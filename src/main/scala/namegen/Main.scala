@@ -1,7 +1,7 @@
 package namegen
 
 import namegen.common.StringPool
-import namegen.historical.{HistoricalNameService, NameLoader}
+import namegen.historical.HistoricalNameService
 import namegen.markov.MarkovNameService
 
 import cats.effect.{ExitCode, IO, IOApp}
@@ -24,14 +24,17 @@ object Main extends IOApp {
   }
 
   class Dependencies {
-    val markovRulesets = {
+    val (historicalFirstNames, historicalLastNames,  markovRulesets) = {
       val stringPool = new StringPool
-      markov.Dataset.loadFromFile("data/markov.csv", stringPool)
+      (
+        historical.Dataset.loadFirstNamesFromFile("data/firstnames.csv", stringPool),
+        historical.Dataset.loadLastNamesFromFile("data/lastnames.csv", stringPool),
+        markov.Dataset.loadFromFile("data/markov.csv", stringPool)
+      )
     }
 
     val random = new Random
-    val (firstNames, lastNames) = NameLoader.load("firstnames.csv", "lastnames.csv")
-    val historicalNameService = new HistoricalNameService(firstNames, lastNames, random)
+    val historicalNameService = new HistoricalNameService(historicalFirstNames, historicalLastNames, random)
     val markovNameService = new MarkovNameService(markovRulesets, random)
     val nameController = new NameController(historicalNameService, markovNameService)
 

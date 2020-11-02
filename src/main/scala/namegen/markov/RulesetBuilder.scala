@@ -5,6 +5,7 @@ import namegen.{Multiset, ProbabilityMap}
 import cats.kernel.Monoid
 import scala.collection.immutable.{ArraySeq, TreeMap}
 
+private[markov]
 object RulesetBuilder {
 
   private val subwordLimit = 3

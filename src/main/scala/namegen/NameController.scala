@@ -1,30 +1,34 @@
 package namegen
 
+import namegen.common.Controller
 import namegen.historical.HistoricalNameService
 import namegen.markov.MarkovNameService
 
-import cats.effect.IO
+import cats.effect.{Clock, IO}
+import cats.implicits._
 import org.http4s.{HttpDate, HttpRoutes, ParseFailure, QueryParamDecoder}
 import org.http4s.CacheDirective._
 import org.http4s.circe.CirceEntityEncoder._
 import org.http4s.dsl.io._
 import org.http4s.headers._
+import org.http4s.metrics.MetricsOps
 import scala.concurrent.duration.Duration
 
 class NameController(
   historicalNameService: HistoricalNameService,
-  markovNameService: MarkovNameService
-) {
-  val routes: HttpRoutes[IO] = {
-    import Params._
-    HttpRoutes.of[IO] {
+  markovNameService: MarkovNameService,
+  metricsOps: MetricsOps[IO]
+) extends Controller[IO](metricsOps) {
 
+  def routes(implicit clock: Clock[IO]): HttpRoutes[IO] = {
+    import Params._
+    meteredRoute("names_historical") {
       case GET -> Root / "names" / "historical" :? Decade(decade) +& Sex(sex) +& Limit(limit) =>
         Ok(
           historicalNameService.generateNames(decade, sex, limit.getOrElse(20)),
           noCache: _*
         )
-
+    } <+> meteredRoute("names_markov") {
       case GET -> Root / "names" / "markov" :? Sex(sex) +& Limit(limit) =>
         Ok(
           markovNameService.generateNames(sex, limit.getOrElse(20)),

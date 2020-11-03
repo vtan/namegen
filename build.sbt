@@ -11,6 +11,7 @@ libraryDependencies ++= Vector(
   "org.http4s" %% "http4s-blaze-server" % http4sVersion,
   "org.http4s" %% "http4s-circe" % http4sVersion,
   "org.http4s" %% "http4s-dsl" % http4sVersion,
+  "org.http4s" %% "http4s-prometheus-metrics" % "1.0.0-M5",      // TODO upgrade!
 
   "ch.qos.logback" % "logback-classic" % "1.2.3"
 )

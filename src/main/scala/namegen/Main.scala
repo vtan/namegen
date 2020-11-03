@@ -5,7 +5,9 @@ import namegen.historical.HistoricalNameService
 import namegen.markov.MarkovNameService
 
 import cats.effect.{ExitCode, IO, IOApp}
+import io.prometheus.client.CollectorRegistry
 import org.http4s.implicits._
+import org.http4s.metrics.prometheus.{Prometheus, PrometheusExportService}
 import org.http4s.server.Router
 import org.http4s.server.blaze.BlazeServerBuilder
 import scala.util.Random
@@ -16,14 +18,16 @@ object Main extends IOApp {
     val dependencies = new Dependencies
 
     import scala.concurrent.ExecutionContext.global
-    BlazeServerBuilder[IO](global)
-      .bindHttp(8081, "localhost")
-      .withHttpApp(dependencies.router)
-      .serve.compile.drain
-      .as(ExitCode.Success)
+    dependencies.router.use { router =>
+      BlazeServerBuilder[IO](global)
+        .bindHttp(8081, "localhost")
+        .withHttpApp(router)
+        .serve.compile.drain
+        .as(ExitCode.Success)
+    }
   }
 
-  class Dependencies {
+  private class Dependencies {
     val (historicalFirstNames, historicalLastNames,  markovRulesets) = {
       val stringPool = new StringPool
       (
@@ -36,8 +40,23 @@ object Main extends IOApp {
     val random = new Random
     val historicalNameService = new HistoricalNameService(historicalFirstNames, historicalLastNames, random)
     val markovNameService = new MarkovNameService(markovRulesets, random)
-    val nameController = new NameController(historicalNameService, markovNameService)
 
-    val router = Router("/api" -> nameController.routes).orNotFound
+    val prometheusExportService = {
+      import io.prometheus.client.hotspot._
+      val collectorRegistry = new CollectorRegistry()
+      collectorRegistry.register(new StandardExports())
+      collectorRegistry.register(new GarbageCollectorExports())
+      collectorRegistry.register(new ThreadExports())
+      collectorRegistry.register(new MemoryPoolsExports())
+      PrometheusExportService[IO](collectorRegistry)
+    }
+
+    val router = for {
+      metricsOps <- Prometheus.metricsOps[IO](prometheusExportService.collectorRegistry, "http")
+      nameController = new NameController(historicalNameService, markovNameService, metricsOps)
+    } yield Router(
+      "/api" -> nameController.routes,
+      "/" -> prometheusExportService.routes
+    ).orNotFound
   }
 }

@@ -9,9 +9,12 @@ class MarkovNameService(
   rulesets: Map[String, Ruleset[ProbabilityMap]],
   random: Random
 ) {
-  private val lastNameGenerator = new MarkovGenerator(rulesets("L"), 3 to 7, 6 to 12)
-  private val maleFirstNameGenerator = new MarkovGenerator(rulesets("M"), 3 to 7, 6 to 12)
-  private val femaleFirstNameGenerator = new MarkovGenerator(rulesets("F"), 3 to 7, 6 to 12)
+  private val minLengthRange = 3 to 6
+  private val maxLengthRange = 6 to 10
+  
+  private val lastNameGenerator = new MarkovGenerator(rulesets("L"), minLengthRange, maxLengthRange)
+  private val maleFirstNameGenerator = new MarkovGenerator(rulesets("M"), minLengthRange, maxLengthRange)
+  private val femaleFirstNameGenerator = new MarkovGenerator(rulesets("F"), minLengthRange, maxLengthRange)
 
   def generateNames(sex: Option[Sex], limit: Int): MarkovNames = {
     val firstNameGenerator = sex match {

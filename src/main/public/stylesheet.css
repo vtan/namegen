@@ -109,7 +109,7 @@ button .unimportant { color: var(--ui-border); }
 
 .name.selected { background-color: var(--selected-bg); }
 
-.name:hover, .name.selected:hover { background-color: var(--selected-hover-bg); }
+.name.selectable:hover, .name.selected:hover { background-color: var(--selected-hover-bg); }
 .name.selected:hover { transition: 0.15s; }
 
 .nameDetails { margin: 0.25rem 0 0.25rem 1rem; }

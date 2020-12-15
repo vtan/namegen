@@ -77,7 +77,7 @@ const HistoricalNameList = (props: { result: HistoricalNames }) => {
     { result.names.map((names, index) => {
         const fullName = names.map(name => name.name).join(" ")
         const key = `${index}-${fullName}`
-        return <div key={key} data-key={key} onClick={onNameClick} className={`name${selectedNameKey === key ? " selected" : ""}`}>
+        return <div key={key} data-key={key} onClick={onNameClick} className={`name selectable${selectedNameKey === key ? " selected" : ""}`}>
           {fullName}
           { selectedNameKey === key &&
               <div className="nameDetails">

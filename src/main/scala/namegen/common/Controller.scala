@@ -10,5 +10,9 @@ abstract class Controller[F[_]](metricsOps: MetricsOps[F]) {
   def meteredRoute(name: String)(
     pf: PartialFunction[Request[F], F[Response[F]]]
   )(implicit clock: Clock[F], sync: Sync[F]): HttpRoutes[F] =
-    Metrics(metricsOps, classifierF = (_: Request[F]) => Some(name))(HttpRoutes.of(pf))
+    Metrics(
+      metricsOps,
+      classifierF = (_: Request[F]) => Some(name),
+      emptyResponseHandler = None
+    )(HttpRoutes.of(pf))
 }

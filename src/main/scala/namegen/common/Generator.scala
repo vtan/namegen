@@ -3,20 +3,20 @@ package namegen.common
 import scala.util.Random
 
 trait Generator[T] {
-  def generate(random: Random): Option[T]
+  def generate(random: Random, transformArg: Float => Float): Option[T]
 
   def union(other: Generator[T]) = new Generator.Union[T](this, other)
 }
 
 object Generator {
   def empty[T]: SizedGenerator[T] = new SizedGenerator[T] {
-    def generate(random: Random): Option[T] = None
+    def generate(random: Random, transformArg: Float => Float): Option[T] = None
     def size: Int = 0
   }
 
   class Union[T](gen1: Generator[T], gen2: Generator[T]) extends Generator[T] {
-    def generate(random: Random): Option[T] =
-      (if (random.nextBoolean()) gen1 else gen2).generate(random)
+    def generate(random: Random, transformArg: Float => Float): Option[T] =
+      (if (random.nextBoolean()) gen1 else gen2).generate(random, transformArg)
   }
 }
 

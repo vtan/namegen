@@ -16,7 +16,7 @@ class MarkovGenerator(
 
   val size: Int = ruleset.values.map(_.size).sum
 
-  def generate(random: Random): Option[Seq[Phoneme]] = {
+  def generate(random: Random, transformArg: Float => Float): Option[Seq[Phoneme]] = {
     val minLength = random.between(minLengthRange.start, minLengthRange.end)
     val maxLength = random.between(maxLengthRange.start, maxLengthRange.end)
 
@@ -28,10 +28,10 @@ class MarkovGenerator(
         ruleset.get(lookBehind).flatMap { possibilities =>
           val canEnd = previousPhonemes.length >= minLength
           val key = if (canEnd) {
-            random.nextFloat()
+            transformArg(random.nextFloat())
           } else {
             // The last rule leads to ending the word
-            random.nextFloat() * possibilities.lastKey
+            transformArg(random.nextFloat()) * possibilities.lastKey
           }
           val chosen = possibilities.maxBefore(key).map(_._2).filter(_.nonEmpty)
           chosen.map { phoneme =>

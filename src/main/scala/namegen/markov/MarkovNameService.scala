@@ -24,8 +24,8 @@ class MarkovNameService(
     }
     val names = (1 to limit).flatMap { _ =>
       for {
-        firstName <- firstNameGenerator.generate(random)
-        lastName <- lastNameGenerator.generate(random)
+        firstName <- firstNameGenerator.generate(random, transformArg = identity)
+        lastName <- lastNameGenerator.generate(random, transformArg = identity)
       } yield Seq(capitalizeName(firstName.mkString), capitalizeName(lastName.mkString))
     }
     MarkovNames(

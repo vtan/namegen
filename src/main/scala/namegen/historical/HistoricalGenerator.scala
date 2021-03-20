@@ -9,8 +9,10 @@ class HistoricalGenerator(
   map: ProbabilityMap[String]
 ) extends SizedGenerator[GeneratedName] {
 
-  def generate(random: Random): Option[GeneratedName] =
-    map.maxBefore(random.nextFloat()).map((GeneratedName.apply _).tupled)
+  def generate(random: Random, transformArg: Float => Float): Option[GeneratedName] = {
+    val arg = transformArg(random.nextFloat())
+    map.maxBefore(arg).map((GeneratedName.apply _).tupled)
+  }
 
   def size: Int = map.size
 }

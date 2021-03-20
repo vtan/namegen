@@ -23,9 +23,9 @@ class NameController(
   def routes(implicit clock: Clock[IO]): HttpRoutes[IO] = {
     import Params._
     meteredRoute("names_historical") {
-      case GET -> Root / "names" / "historical" :? Decade(decade) +& Sex(sex) +& Limit(limit) =>
+      case GET -> Root / "names" / "historical" :? Decade(decade) +& Sex(sex) +& Bias(bias) +& Limit(limit) =>
         Ok(
-          historicalNameService.generateNames(decade, sex, limit.getOrElse(20)),
+          historicalNameService.generateNames(decade, sex, bias.filter(_ > 1), limit.getOrElse(20)),
           noCache: _*
         )
     } <+> meteredRoute("names_markov") {
@@ -46,6 +46,7 @@ class NameController(
     object Decade extends QueryParamDecoderMatcher[Int]("decade")
     object Sex extends OptionalQueryParamDecoderMatcher[common.Sex]("sex")
     object Limit extends OptionalQueryParamDecoderMatcher[Int]("limit")(limitDeocder)
+    object Bias extends OptionalQueryParamDecoderMatcher[Int]("bias")(biasDecoder)
   }
 
   private implicit val sexDecoder: QueryParamDecoder[common.Sex] =
@@ -65,6 +66,15 @@ class NameController(
         Left(ParseFailure(
           sanitized = "Invalid limit",
           details = s"Invalid limit: $invalid"
+        ))
+    }
+  private val biasDecoder: QueryParamDecoder[Int] =
+    QueryParamDecoder.intQueryParamDecoder.emap {
+      case bias if (1 to 10).contains(bias) => Right(bias)
+      case invalid =>
+        Left(ParseFailure(
+          sanitized = "Invalid bias",
+          details = s"Invalid bias: $invalid"
         ))
     }
 }

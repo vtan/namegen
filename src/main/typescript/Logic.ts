@@ -3,9 +3,13 @@ import { HistoricalNames, Sex, MarkovNames } from "./Model"
 export function fetchHistoricalNames(
   decade: number,
   sex: Sex | undefined,
+  bias: number,
   setter: (_: HistoricalNames) => void
 ) {
-  fetch(`/api/names/historical?limit=20&decade=${decade}` + (sex ? `&sex=${sex}` : ""))
+  fetch(`/api/names/historical?limit=20&decade=${decade}`
+    + (sex ? `&sex=${sex}` : "")
+    + (bias ? `&bias=${bias}` : "")
+  )
     .then(response => response.json())
     .then(setter)
 }

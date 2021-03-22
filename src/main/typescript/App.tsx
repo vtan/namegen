@@ -66,7 +66,7 @@ export const App = () => {
       { names &&
         <div className="centeredLayout">
           { openSelector === "decade" && <DecadeSelector selected={decade} onChange={onDecadeChange} /> }
-          { openSelector === "bias" && <BiasSelector selected={bias} onChange={onBiasChange} /> }
+          { openSelector === "bias" && names.type === "historical" && <BiasSelector selected={bias} onChange={onBiasChange} /> }
           { names.type === "historical" && <HistoricalNameList result={names.result} /> }
           { names.type === "markov" && <MarkovNameList result={names.result} /> }
         </div>

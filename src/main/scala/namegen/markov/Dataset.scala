@@ -11,7 +11,7 @@ object Dataset {
 
   def buildToFile(filename: String): Unit = {
     println("Building first names...")
-    val (maleRuleset, femaleRuleset) = FirstNameImporter.importWith("data/raw") { firstNames =>
+    val (maleRuleset, femaleRuleset) = FirstNameImporter.importWith("data-raw") { firstNames =>
       val (maleNames, femaleNames) = firstNames
         .map(_._2)
         .partition(_.sex == Sex.Male)
@@ -21,7 +21,7 @@ object Dataset {
     }
 
     println("Building last names...")
-    val lastNameRuleset = LastNameImporter.importWith("data/raw")(RulesetBuilder.build)
+    val lastNameRuleset = LastNameImporter.importWith("data-raw")(RulesetBuilder.build)
 
     val buckets =
       rulesetToBuckets("M", maleRuleset) ++

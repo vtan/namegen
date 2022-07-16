@@ -10,7 +10,7 @@ The last names are from the 2000 US census data: https://www.census.gov/topics/p
 
 ## Build
 
-Extract the [first name](https://www.ssa.gov/oact/babynames/names.zip) and [last name](http://www2.census.gov/topics/genealogy/2000surnames/names.zip) data to the `data/raw` subdirectory, then generate the dataset:
+Extract the [first name](https://www.ssa.gov/oact/babynames/names.zip) and [last name](http://www2.census.gov/topics/genealogy/2000surnames/names.zip) data to the `data-raw` subdirectory, then generate the dataset:
 
 ```
 $ sbt console

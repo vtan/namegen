@@ -9,7 +9,7 @@ object Dataset {
   def buildToFile(firstNameFilename: String, lastNameFilename: String): Unit = {
     {
       println("Building first names...")
-      val names = FirstNameImporter.importWith("data/raw") { namesCounts =>
+      val names = FirstNameImporter.importWith("data-raw") { namesCounts =>
         val iterator = namesCounts.map {
           case (year, name) => (FirstNameKey(year / 10 * 10, name.sex), name.name, name.count)
         }
@@ -19,7 +19,7 @@ object Dataset {
     }
     {
       println("Building last names...")
-      val names = LastNameImporter.importWith("data/raw") { namesCounts =>
+      val names = LastNameImporter.importWith("data-raw") { namesCounts =>
         val iterator = namesCounts.map { case (name, count) => ((), name, count) }
         ProbabilityMapBuilder.build(iterator)
       }

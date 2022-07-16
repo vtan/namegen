@@ -1,6 +1,8 @@
+.bsp/
 .idea/
 node_modules/
 project/project/target/
 project/target/
 target/
 data/
+data-raw/

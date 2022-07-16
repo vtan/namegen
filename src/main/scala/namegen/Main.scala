@@ -20,7 +20,7 @@ object Main extends IOApp {
     import scala.concurrent.ExecutionContext.global
     dependencies.router.use { router =>
       BlazeServerBuilder[IO](global)
-        .bindHttp(8081, "localhost")
+        .bindHttp(8081, "0.0.0.0")
         .withHttpApp(router)
         .serve.compile.drain
         .as(ExitCode.Success)

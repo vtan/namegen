@@ -41,7 +41,7 @@ object RulesetBuilder {
     val subwordRules: Iterator[Ruleset[Multiset]] = subwords.collect {
       case prefix :+ next if prefix.nonEmpty => Map(ArraySeq.from(prefix) -> Map(next -> count))
     }
-    val startOfWordRule: Ruleset[Multiset] = Map(ArraySeq.empty -> Map(phonemes.head -> count))
+    val startOfWordRule: Ruleset[Multiset] = Map(ArraySeq.empty[Phoneme] -> Map(phonemes.head -> count))
     val endOfWordRule: Ruleset[Multiset] = Map(ArraySeq.from(phonemes.takeRight(subwordLimit - 1)) -> Map("" -> count))
 
     import cats.implicits._

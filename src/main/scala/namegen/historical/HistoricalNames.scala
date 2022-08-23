@@ -10,5 +10,5 @@ final case class HistoricalNames(
 )
 
 object HistoricalNames {
-  implicit val encoder: Encoder[HistoricalNames] = deriveEncoder
+  given Encoder[HistoricalNames] = deriveEncoder
 }

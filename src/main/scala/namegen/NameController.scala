@@ -20,7 +20,7 @@ class NameController(
   metricsOps: MetricsOps[IO]
 ) extends Controller[IO](metricsOps) {
 
-  def routes(implicit clock: Clock[IO]): HttpRoutes[IO] = {
+  def routes(using Clock[IO]): HttpRoutes[IO] = {
     import Params._
     meteredRoute("names_historical") {
       case GET -> Root / "names" / "historical" :? Decade(decade) +& Sex(sex) +& Bias(bias) +& Limit(limit) =>
@@ -49,7 +49,7 @@ class NameController(
     object Bias extends OptionalQueryParamDecoderMatcher[Int]("bias")(biasDecoder)
   }
 
-  private implicit val sexDecoder: QueryParamDecoder[common.Sex] =
+  private given QueryParamDecoder[common.Sex] =
     QueryParamDecoder[String].emap {
       case "male" => Right(common.Sex.Male)
       case "female" => Right(common.Sex.Female)

@@ -10,5 +10,5 @@ final case class MarkovNames(
 )
 
 object MarkovNames {
-  implicit val encoder: Encoder[MarkovNames] = deriveEncoder
+  given Encoder[MarkovNames] = deriveEncoder
 }

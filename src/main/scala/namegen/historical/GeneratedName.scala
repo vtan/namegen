@@ -9,5 +9,5 @@ final case class GeneratedName(
 )
 
 object GeneratedName {
-  implicit val encoder: Encoder[GeneratedName] = deriveEncoder
+  given Encoder[GeneratedName] = deriveEncoder
 }

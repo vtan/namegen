@@ -1,9 +1,9 @@
 name := "namegen"
 version := "0.1"
-scalaVersion := "2.13.3"
+scalaVersion := "2.13.8"
 
-val circeVersion = "0.13.0"
-val http4sVersion = "1.0.0-M4"
+val circeVersion = "0.14.2"
+val http4sVersion = "1.0.0-M35"
 
 libraryDependencies ++= Vector(
   "io.circe" %% "circe-core" % circeVersion,
@@ -11,9 +11,9 @@ libraryDependencies ++= Vector(
   "org.http4s" %% "http4s-blaze-server" % http4sVersion,
   "org.http4s" %% "http4s-circe" % http4sVersion,
   "org.http4s" %% "http4s-dsl" % http4sVersion,
-  "org.http4s" %% "http4s-prometheus-metrics" % "1.0.0-M5",      // TODO upgrade!
+  "org.http4s" %% "http4s-prometheus-metrics" % http4sVersion,
 
-  "ch.qos.logback" % "logback-classic" % "1.2.3"
+  "ch.qos.logback" % "logback-classic" % "1.2.11"
 )
 
 mainClass := Some("namegen.Main")

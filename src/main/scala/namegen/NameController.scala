@@ -6,7 +6,7 @@ import namegen.markov.MarkovNameService
 
 import cats.effect.{Clock, IO}
 import cats.implicits._
-import org.http4s.{HttpDate, HttpRoutes, ParseFailure, QueryParamDecoder}
+import org.http4s.{Header, HttpDate, HttpRoutes, ParseFailure, QueryParamDecoder}
 import org.http4s.CacheDirective._
 import org.http4s.circe.CirceEntityEncoder._
 import org.http4s.dsl.io._
@@ -37,7 +37,7 @@ class NameController(
     }
   }
 
-  private val noCache = Seq(
+  private val noCache: Seq[Header.ToRaw] = Seq(
     `Cache-Control`(`max-age`(Duration.Zero), `no-cache`(), `must-revalidate`, `proxy-revalidate`),
     Expires(HttpDate.Epoch)
   )

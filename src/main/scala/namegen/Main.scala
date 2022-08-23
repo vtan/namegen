@@ -6,10 +6,10 @@ import namegen.markov.MarkovNameService
 
 import cats.effect.{ExitCode, IO, IOApp}
 import io.prometheus.client.CollectorRegistry
+import org.http4s.blaze.server.BlazeServerBuilder
 import org.http4s.implicits._
 import org.http4s.metrics.prometheus.{Prometheus, PrometheusExportService}
 import org.http4s.server.Router
-import org.http4s.server.blaze.BlazeServerBuilder
 import scala.util.Random
 
 object Main extends IOApp {
@@ -17,9 +17,8 @@ object Main extends IOApp {
   def run(args: List[String]): IO[ExitCode] = {
     val dependencies = new Dependencies
 
-    import scala.concurrent.ExecutionContext.global
     dependencies.router.use { router =>
-      BlazeServerBuilder[IO](global)
+      BlazeServerBuilder[IO]
         .bindHttp(8081, "0.0.0.0")
         .withHttpApp(router)
         .serve.compile.drain

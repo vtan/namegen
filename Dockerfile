@@ -1,3 +1,12 @@
+FROM --platform=$BUILDPLATFORM hseeberger/scala-sbt:17.0.2_1.6.2_3.1.1 as scala
+
+COPY build.sbt ./
+COPY project/build.properties ./project/
+COPY project/assembly.sbt ./project/
+COPY src/ ./src
+
+RUN sbt assembly
+
 FROM --platform=$TARGETPLATFORM amazoncorretto:17.0.4 as corretto-jdk
 
 RUN yum -y install binutils
@@ -20,7 +29,7 @@ COPY --from=corretto-jdk /customjre $JAVA_HOME
 
 USER 1000
 
-COPY --chown=1000:1000 target/scala-2.13/namegen-assembly-0.1.jar ./
+COPY --from=scala --chown=1000:1000 /root/target/scala-3.1.3/namegen-assembly-0.1.jar ./
 COPY --chown=1000:1000 data/ ./data
 
 CMD java -jar namegen-assembly-0.1.jar

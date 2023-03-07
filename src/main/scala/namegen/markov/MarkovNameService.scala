@@ -1,7 +1,7 @@
 package namegen.markov
 
-import namegen.{capitalizeName, ProbabilityMap}
-import namegen.common.Sex
+import namegen.capitalizeName
+import namegen.common.{ProbabilityMap, Sex}
 
 import scala.util.Random
 

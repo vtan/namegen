@@ -1,6 +1,6 @@
 package namegen.markov
 
-import namegen.{Multiset, ProbabilityMap}
+import namegen.Multiset
 
 import cats.kernel.Monoid
 import scala.collection.immutable.{ArraySeq, TreeMap}
@@ -11,7 +11,9 @@ object RulesetBuilder {
   private val subwordLimit = 3
   private val smoothingExponent = 1.0 / 6
 
-  def build(wordsWithCount: Iterator[(String, Int)]): Ruleset[ProbabilityMap] = {
+  type TreeMapFloat[T] = TreeMap[Float, T]
+
+  def build(wordsWithCount: Iterator[(String, Int)]): Ruleset[TreeMapFloat] = {
     val rulesetsPerWord = wordsWithCount.map {
       case (word, count) =>
         val smoothedCount = Math.ceil(Math.pow(count.toDouble, smoothingExponent)).toInt
@@ -48,7 +50,7 @@ object RulesetBuilder {
     Monoid.combineAll(subwordRules ++ Iterable(startOfWordRule, endOfWordRule))
   }
 
-  private def cumulateOccurences[T](occurences: Iterable[(T, Int)]): ProbabilityMap[T] = {
+  private def cumulateOccurences[T](occurences: Iterable[(T, Int)]): TreeMapFloat[T] = {
     val sum = occurences.map(_._2).sum.toFloat
     val (_, result) = occurences.foldLeft((0, TreeMap.empty[Float, T])) {
       case ((partialSum, result), (item, count)) =>

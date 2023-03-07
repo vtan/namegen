@@ -1,8 +1,8 @@
 name := "namegen"
 version := "0.1"
-scalaVersion := "3.1.3"
+scalaVersion := "3.2.2"
 
-val circeVersion = "0.14.2"
+val circeVersion = "0.14.5"
 val http4sVersion = "1.0.0-M35"
 
 libraryDependencies ++= Vector(
@@ -21,7 +21,6 @@ mainClass := Some("namegen.Main")
 scalacOptions ++= Seq(
   "-deprecation",                      // Emit warning and location for usages of deprecated APIs.
   "-encoding", "utf-8",                // Specify character encoding used by source files.
-  "-explain-types",                    // Explain type errors in more detail.
   "-feature",                          // Emit warning and location for usages of features that should be imported explicitly.
   "-unchecked"                         // Enable additional warnings where generated code depends on assumptions.
 )

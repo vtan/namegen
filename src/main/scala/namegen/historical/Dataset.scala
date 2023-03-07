@@ -1,8 +1,7 @@
 package namegen.historical
 
-import namegen.common.{ProbabilityMapIO, Sex, StringPool}
+import namegen.common.{ProbabilityMap, ProbabilityMapIO, Sex, StringPool}
 import namegen.importer.{FirstNameImporter, LastNameImporter}
-import namegen.ProbabilityMap
 
 object Dataset {
 

@@ -1,7 +1,6 @@
 package namegen.historical
 
-import namegen.ProbabilityMap
-import namegen.common.SizedGenerator
+import namegen.common.{ProbabilityMap, SizedGenerator}
 
 import scala.util.Random
 

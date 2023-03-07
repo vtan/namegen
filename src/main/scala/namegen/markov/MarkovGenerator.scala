@@ -1,7 +1,6 @@
 package namegen.markov
 
-import namegen.ProbabilityMap
-import namegen.common.SizedGenerator
+import namegen.common.{ProbabilityMap, SizedGenerator}
 
 import scala.collection.immutable.ArraySeq
 import scala.util.Random

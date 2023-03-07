@@ -1,7 +1,6 @@
 package namegen.historical
 
-import namegen.ProbabilityMap
-import namegen.common.{Generator, Sex}
+import namegen.common.{Generator, ProbabilityMap, Sex}
 
 import scala.util.Random
 

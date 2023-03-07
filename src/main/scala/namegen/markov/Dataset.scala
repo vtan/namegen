@@ -1,10 +1,9 @@
 package namegen.markov
 
-import namegen.ProbabilityMap
-import namegen.common.{ProbabilityMapIO, Sex, StringPool}
+import namegen.common.{ProbabilityMap, ProbabilityMapIO, Sex, StringPool}
 import namegen.importer.{FirstNameImporter, LastNameImporter}
 
-import scala.collection.immutable.ArraySeq
+import scala.collection.immutable.{ArraySeq, TreeMap}
 
 object Dataset {
   import Ordering.Implicits._
@@ -40,7 +39,7 @@ object Dataset {
     }.map { case (k, v) => k -> Map.from(v) }
   }
 
-  private def rulesetToBuckets(key: String, ruleset: Ruleset[ProbabilityMap]): Iterable[((String, Seq[Phoneme]), ProbabilityMap[String])] =
+  private def rulesetToBuckets(key: String, ruleset: Ruleset[RulesetBuilder.TreeMapFloat]): Iterable[((String, Seq[Phoneme]), TreeMap[Float, String])] =
     ArraySeq.from(
       ruleset.iterator.map {
         case (phonemes, probabilities) => (key, phonemes) -> probabilities

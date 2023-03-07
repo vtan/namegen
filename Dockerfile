@@ -7,7 +7,7 @@ COPY src/ ./src
 
 RUN sbt assembly
 
-FROM --platform=$TARGETPLATFORM amazoncorretto:17.0.4 as corretto-jdk
+FROM --platform=$TARGETPLATFORM amazoncorretto:19.0.2 as corretto-jdk
 
 RUN yum -y install binutils
 
@@ -20,7 +20,7 @@ RUN $JAVA_HOME/bin/jlink \
     --compress=2 \
     --output /customjre
 
-FROM --platform=$TARGETPLATFORM debian:11.4-slim
+FROM --platform=$TARGETPLATFORM debian:11.6-slim
 
 ENV JAVA_HOME=/jre
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
@@ -29,7 +29,7 @@ COPY --from=corretto-jdk /customjre $JAVA_HOME
 
 USER 1000
 
-COPY --from=scala --chown=1000:1000 /root/target/scala-3.1.3/namegen-assembly-0.1.jar ./
+COPY --from=scala --chown=1000:1000 /root/target/scala-3.2.2/namegen-assembly-0.1.jar ./
 COPY --chown=1000:1000 data/ ./data
 
 CMD java -jar namegen-assembly-0.1.jar

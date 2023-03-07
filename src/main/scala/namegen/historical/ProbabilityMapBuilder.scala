@@ -1,7 +1,5 @@
 package namegen.historical
 
-import namegen.ProbabilityMap
-
 import scala.collection.immutable.TreeMap
 import scala.collection.mutable
 
@@ -10,7 +8,7 @@ object ProbabilityMapBuilder {
 
   def build[BucketKey](
     lines: Iterator[(BucketKey, String, Int)]
-  ): Map[BucketKey, ProbabilityMap[String]] = {
+  ): Map[BucketKey, TreeMap[Float, String]] = {
     val totalCounts = mutable.Map.empty[BucketKey, Int]
     val countBuckets = mutable.Map.empty[BucketKey, mutable.ArrayBuffer[(Int, String)]]
 
@@ -33,7 +31,7 @@ object ProbabilityMapBuilder {
     totalCounts: Map[BucketKey, Int],
     key: BucketKey,
     bucket: mutable.ArrayBuffer[(Int, String)]
-  ): ProbabilityMap[String] = {
+  ): TreeMap[Float, String] = {
     val totalCount = totalCounts.getOrElse(key, 0).toFloat
     val countsByName = mutable.ArrayBuffer.from(bucket.groupMapReduce(_._2)(_._1)(_ + _))
     countsByName.sortInPlaceBy(-_._2)

@@ -10,13 +10,15 @@
 }
 
 html {
-  font-family: 'Lato', sans-serif;
   font-size: 16px;
   background-color: #fcfcfc;
   color: #101010;
 }
 
-a:link, a:visited { color: #1c4079; }
+a:link,
+a:visited {
+  color: #1c4079;
+}
 
 header {
   padding: 1rem 0;
@@ -36,7 +38,9 @@ button:hover {
   transition: background-color 0.15s;
 }
 
-button:focus { outline: 1px solid rgba(0, 0, 0, 0.1); }
+button:focus {
+  outline: 1px solid rgba(0, 0, 0, 0.1);
+}
 
 .centeredLayout {
   width: min(640px, 100vw - 16px);
@@ -54,9 +58,13 @@ button:focus { outline: 1px solid rgba(0, 0, 0, 0.1); }
   font-weight: bolder;
 }
 
-.typeSelector a:not(:first-of-type) { margin-left: 1.5rem; }
+.typeSelector a:not(:first-of-type) {
+  margin-left: 1.5rem;
+}
 
-.typeSelector a.selected { border-bottom: 2px solid var(--ui-border); }
+.typeSelector a.selected {
+  border-bottom: 2px solid var(--ui-border);
+}
 
 .typeSelector a:hover {
   background-color: var(--selected-hover-bg);
@@ -74,7 +82,9 @@ button:focus { outline: 1px solid rgba(0, 0, 0, 0.1); }
   font-weight: bolder;
 }
 
-.selectors > :not(:first-child):not(:last-child) { margin-right: 0.5rem; }
+.selectors > :not(:first-child):not(:last-child) {
+  margin-right: 0.5rem;
+}
 
 .selectors .repositoryLink {
   display: inline-block;
@@ -91,14 +101,20 @@ button:focus { outline: 1px solid rgba(0, 0, 0, 0.1); }
   pointer-events: none;
 }
 
-button:active { background-color: var(--selected-bg); }
-button.selected { background-color: var(--selected-bg); }
+button:active {
+  background-color: var(--selected-bg);
+}
+button.selected {
+  background-color: var(--selected-bg);
+}
 button.selected:hover {
   background-color: var(--selected-hover-bg);
   transition: background-color 0.15s;
 }
 
-button .unimportant { color: var(--ui-border); }
+button .unimportant {
+  color: var(--ui-border);
+}
 
 .secondarySelector {
   display: flex;
@@ -112,23 +128,38 @@ button .unimportant { color: var(--ui-border); }
   align-self: center;
 }
 
-.names { margin-top: 1rem; }
+.names {
+  margin-top: 1rem;
+}
 
 .name {
   margin-left: -1rem;
   padding: 0.25rem 0.25rem 0.25rem 1rem;
 }
 
-.name.selected { background-color: var(--selected-bg); }
+.name.selected {
+  background-color: var(--selected-bg);
+}
 
-.name.selectable:hover, .name.selected:hover { background-color: var(--selected-hover-bg); }
-.name.selected:hover { transition: 0.15s; }
+.name.selectable:hover,
+.name.selected:hover {
+  background-color: var(--selected-hover-bg);
+}
+.name.selected:hover {
+  transition: 0.15s;
+}
 
-.nameDetails { margin: 0.25rem 0 0.25rem 1rem; }
+.nameDetails {
+  margin: 0.25rem 0 0.25rem 1rem;
+}
 
-.nameDetailsRow { padding-top: 0.25rem; }
+.nameDetailsRow {
+  padding-top: 0.25rem;
+}
 
-.nameDetailsRow span { display: inline-block; }
+.nameDetailsRow span {
+  display: inline-block;
+}
 
 .nameDetailsRow span:first-child {
   min-width: 6rem;

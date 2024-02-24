@@ -1,6 +1,8 @@
 .bsp/
 .idea/
+.next/
 node_modules/
+out/
 project/project/target/
 project/target/
 target/
